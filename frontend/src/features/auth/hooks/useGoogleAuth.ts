@@ -14,7 +14,7 @@ export const useGoogleAuth = () => {
 
             login(token);
 
-            navigate("/dashboard");
+            navigate("/home");
         } catch (error) {
             console.error("Error al autenticar con el backend", error);
             alert("Hubo un problema al iniciar sesión. Asegúrate de usar un correo de la UCB.");
