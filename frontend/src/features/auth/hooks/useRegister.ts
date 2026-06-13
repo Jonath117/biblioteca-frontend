@@ -19,7 +19,7 @@ export const useRegister = () => {
       login(token);
       navigate('/dashboard');
     } catch (err) {
-      setError('No se pudo crear la cuenta. Verificá los datos e intentá de nuevo.');
+      setError('No se pudo crear la cuenta. Verifica los datos e intenta de nuevo.');
       console.error('Error al registrarse:', err);
     } finally {
       setIsLoading(false);
