@@ -17,8 +17,8 @@ export const LoginScreen = () => {
 
   const [loginForm, setLoginForm] = useState<LoginCredentials>({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState<RegisterCredentials>({
-    firstName: '',
-    lastName: '',
+    nombre: '',
+    apellido: '',
     email: '',
     password: '',
   });
@@ -145,8 +145,8 @@ export const LoginScreen = () => {
                   <input
                     type="text"
                     placeholder="Juan"
-                    value={registerForm.firstName}
-                    onChange={(e) => setRegisterForm({ ...registerForm, firstName: e.target.value })}
+                    value={registerForm.nombre}
+                    onChange={(e) => setRegisterForm({ ...registerForm, nombre: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                   />
                 </div>
@@ -157,8 +157,8 @@ export const LoginScreen = () => {
                   <input
                     type="text"
                     placeholder="Pérez"
-                    value={registerForm.lastName}
-                    onChange={(e) => setRegisterForm({ ...registerForm, lastName: e.target.value })}
+                    value={registerForm.apellido}
+                    onChange={(e) => setRegisterForm({ ...registerForm, apellido: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
                   />
                 </div>
