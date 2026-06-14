@@ -4,6 +4,8 @@ import { useAuthStore } from '../../../store/authStore';
 import { authApi } from '../api/auth.api';
 import type { LoginCredentials } from '../types/auth.types';
 
+import axios from 'axios'; 
+
 export const useLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -18,9 +20,17 @@ export const useLogin = () => {
       const token = await authApi.loginWithCredentials(credentials);
       login(token);
       navigate('/dashboard');
-    } catch (err) {
-      setError('Correo o contraseña incorrectos.');
+    }  catch (err) {
       console.error('Error al iniciar sesión:', err);
+
+      if (axios.isAxiosError(err) && err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
+      }
+
     } finally {
       setIsLoading(false);
     }
