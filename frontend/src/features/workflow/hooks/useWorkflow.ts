@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { workflowApi } from '../api/workflow.api';
 import type { Revision } from '../types/workflow.types';
+import axios from 'axios';
 
 export const useWorkflow = () => {
   const [revisiones, setRevisiones] = useState<Revision[]>([]);
@@ -14,8 +15,8 @@ export const useWorkflow = () => {
       const data = await workflowApi.getAllRevisiones();
       setRevisiones(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al cargar revisiones';
-      setError(message);
+      console.error(err);
+      setError('Error al cargar revisiones');
     } finally {
       setLoading(false);
     }
@@ -28,8 +29,13 @@ export const useWorkflow = () => {
       await workflowApi.assignReviewer(id, asesorId);
       await fetchRevisiones();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al asignar revisor';
+      let message = 'Error al asignar revisor';
+      if (axios.isAxiosError(err) && err.response?.data?.error) {
+        message = err.response.data.error;
+      }
+      console.error(err);
       setError(message);
+      alert(`Error del Backend: ${message}`);
       throw err;
     } finally {
       setLoading(false);
@@ -41,9 +47,37 @@ export const useWorkflow = () => {
     setError(null);
     try {
       await workflowApi.addComment(id, autorId, contenido);
+      await fetchRevisiones(); 
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Error al agregar comentario';
+      let message = 'Error al agregar comentario';
+      if (axios.isAxiosError(err) && err.response?.data?.error) {
+         message = err.response.data.error; 
+      } else if (axios.isAxiosError(err) && err.response?.data) {
+         message = JSON.stringify(err.response.data);
+      }
+      console.error(err);
       setError(message);
+      alert(`Mensaje del Backend: ${message}`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resolveRevision = async (id: string, nuevoEstado: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await workflowApi.resolveRevision(id, nuevoEstado);
+      await fetchRevisiones(); 
+    } catch (err: unknown) {
+      let message = 'Error al resolver la revisión';
+      if (axios.isAxiosError(err) && err.response?.data?.error) {
+         message = err.response.data.error; 
+      }
+      console.error(err);
+      setError(message);
+      alert(`Error del Backend: ${message}`);
       throw err;
     } finally {
       setLoading(false);
@@ -56,6 +90,7 @@ export const useWorkflow = () => {
     error, 
     fetchRevisiones, 
     assignReviewer, 
-    addComment 
+    addComment,
+    resolveRevision
   };
 };

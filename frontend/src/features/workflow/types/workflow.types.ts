@@ -8,6 +8,13 @@ export const EstadoRevision = {
 
 export type EstadoRevision = typeof EstadoRevision[keyof typeof EstadoRevision];
 
+export type ComentarioRevision = {
+    id: string;
+    autorId: string;
+    contenido: string;
+    fechaCreacion: string;
+};
+
 export type Revision = {
     id: string;
     documentoId: string;
@@ -15,11 +22,5 @@ export type Revision = {
     estado: string;
     fechaAsignacion: string;
     fechaResolucion: string | null;
-};
-
-export type ComentarioRevision = {
-    id: string;
-    revisionId: string;
-    contenido: string;
-    fechaCreacion: string;
+    comentarios: ComentarioRevision[];
 };

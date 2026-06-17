@@ -15,5 +15,10 @@ export const workflowApi = {
   addComment: async (id: string, autorId: string, contenido: string) => {
     const response = await api.post(`/workflow/revisions/${id}/comments`, { autorId, contenido });
     return response.data;
+  },
+
+  resolveRevision: async (id: string, nuevoEstado: number) => {
+    const response = await api.post(`/workflow/revisions/${id}/resolve`, { nuevoEstado });
+    return response.data;
   }
 };
