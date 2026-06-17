@@ -4,6 +4,7 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 import { HomeScreen } from './features/home/components/HomeScreen';
 import { WorkflowListScreen } from './features/workflow/components/WorkflowListScreen';
 import { useAuthStore } from './store/authStore';
+import { WorkspaceScreen } from './features/workspace/components/WorkspaceScreen';
 
 const DashboardPrueba = () => {
   const { logout } = useAuthStore();
@@ -30,6 +31,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPrueba />} />
           <Route path="/workflow" element={<WorkflowListScreen />} />
+          <Route path="/workspace" element={<WorkspaceScreen />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />
