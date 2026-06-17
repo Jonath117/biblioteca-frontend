@@ -3,7 +3,7 @@ import type { Revision } from '../types/workflow.types';
 
 export const workflowApi = {
   getAllRevisiones: async (): Promise<Revision[]> => {
-    const response = await api.get('/workflow/revisions');
+    const response = await api.get('/workflow/revisions'); 
     return response.data;
   },
 

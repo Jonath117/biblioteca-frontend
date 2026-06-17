@@ -1,15 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginScreen } from './features/auth/components/LoginScreen';
-import { ProtectedRoute } from './routes/ProtectedRoute'; // El componente que diseñamos antes
-import { useAuthStore } from './store/authStore';
+import { ProtectedRoute } from './routes/ProtectedRoute';
 import { HomeScreen } from './features/home/components/HomeScreen';
+import { WorkflowListScreen } from './features/workflow/components/WorkflowListScreen';
+import { useAuthStore } from './store/authStore';
 
-//componente rapido para probar el Dashboard
 const DashboardPrueba = () => {
   const { logout } = useAuthStore();
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">Bienvenido al Repositorio Academico</h1>
+      <h1 className="text-2xl font-bold">Bienvenido al Repositorio Académico</h1>
       <button 
         onClick={logout}
         className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
@@ -27,13 +27,12 @@ function App() {
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/login" element={<LoginScreen />} />
 
-        <Route path="*" element={<Navigate to="/home" replace />} />
-
-
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPrueba />} />
+          <Route path="/workflow" element={<WorkflowListScreen />} />
         </Route>
 
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
