@@ -30,11 +30,7 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
     if (!token) return;
     if (!archivo) return;
 
-    const decoded = JSON.parse(atob(token.split('.')[1]));
-    const autorId = decoded.sub;
-
     await subirDocumento({
-      autorPrincipalId: autorId,
       titulo,
       resumen,
       archivo,

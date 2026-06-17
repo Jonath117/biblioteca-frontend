@@ -11,7 +11,6 @@ export interface DocumentoDto {
 }
 
 export interface SubirDocumentoRequest {
-  autorPrincipalId: string;
   titulo: string;
   resumen: string;
   archivo: File;

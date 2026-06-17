@@ -9,7 +9,6 @@ export const workspaceApi = {
 
   subirDocumento: async (data: SubirDocumentoRequest): Promise<SubirDocumentoResponse> => {
     const formData = new FormData();
-    formData.append('AutorPrincipalId', data.autorPrincipalId);
     formData.append('Titulo', data.titulo);
     formData.append('Resumen', data.resumen);
     formData.append('Archivo', data.archivo);
