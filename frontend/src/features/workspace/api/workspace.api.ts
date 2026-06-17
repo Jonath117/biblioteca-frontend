@@ -21,11 +21,6 @@ export const workspaceApi = {
     const response = await api.post<SubirDocumentoResponse>(
       '/workspace/documentos/subir-borrador',
       formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
     );
 
     return response.data;
