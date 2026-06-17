@@ -12,7 +12,7 @@ export type Revision = {
     id: string;
     documentoId: string;
     asesorId: string | null;
-    estado: EstadoRevision;
+    estado: string;
     fechaAsignacion: string;
     fechaResolucion: string | null;
 };
