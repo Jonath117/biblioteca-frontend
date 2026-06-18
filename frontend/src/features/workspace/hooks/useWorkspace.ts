@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { workspaceApi } from '../api/workspace.api';
-import type { DocumentoDto } from '../types/workspace.types';
+import type { DocumentoDto, SubirDocumentoRequest } from '../types/workspace.types';
 import axios from 'axios';
 
 export const useWorkspace = () => {
@@ -26,11 +26,14 @@ export const useWorkspace = () => {
     }
   }, []);
 
-  const subirBorrador = async (formData: FormData) => {
+const subirBorrador = async (data: SubirDocumentoRequest) => {
     setLoading(true);
     setError(null);
     try {
-      await workspaceApi.subirBorrador(formData);
+      // 2. Llamamos al método con su nombre correcto en la API: subirDocumento
+      await workspaceApi.subirDocumento(data);
+      
+      // 3. Recargamos la lista automáticamente
       await fetchDocumentos();
     } catch (err: unknown) {
       console.error(err);
@@ -38,6 +41,11 @@ export const useWorkspace = () => {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
         message = err.response.data.error;
       }
+      // También capturamos posibles errores de validación de FluentValidation (Code 400)
+      else if (axios.isAxiosError(err) && err.response?.data?.title) {
+        message = err.response.data.title;
+      }
+      
       setError(message);
       throw err;
     } finally {
