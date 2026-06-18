@@ -22,11 +22,11 @@ export const useWorkflow = () => {
     }
   }, []);
 
-  const assignReviewer = async (id: string, asesorId: string) => {
+  const assignReviewer = async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      await workflowApi.assignReviewer(id, asesorId);
+      await workflowApi.assignReviewer(id);
       await fetchRevisiones();
     } catch (err: unknown) {
       let message = 'Error al asignar revisor';
@@ -42,11 +42,11 @@ export const useWorkflow = () => {
     }
   };
 
-  const addComment = async (id: string, autorId: string, contenido: string) => {
+  const addComment = async (id: string, contenido: string) => {
     setLoading(true);
     setError(null);
     try {
-      await workflowApi.addComment(id, autorId, contenido);
+      await workflowApi.addComment(id, contenido);
       await fetchRevisiones(); 
     } catch (err: unknown) {
       let message = 'Error al agregar comentario';
