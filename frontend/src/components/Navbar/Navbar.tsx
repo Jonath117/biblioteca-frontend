@@ -1,4 +1,6 @@
 import { useState } from "react";
+import {useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore";
 
 interface NavItem {
   label: string;
@@ -6,14 +8,21 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: "Inicio", href: "#" },
-  { label: "Nosotros", href: "#" },
-  { label: "Servicios", href: "#" },
+  { label: "Inicio", href: "/home" },
+  { label: "Subir Documento", href: "/workspace" },
+  { label: "Mis Documentos", href: "/workflow" },
   { label: "Contacto", href: "#" },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuthStore();
+
+    const handleLogout = () => {
+    logout();
+    navigate("/home");
+  };
 
   return (
     <nav className="w-full bg-white shadow-md px-6 py-3">
@@ -21,7 +30,7 @@ export default function Navbar() {
 
         {/* Logo / Imagen rectangular */}
         <div className="flex items-center gap-4">
-          <div className="w-28 h-12 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center flex-shrink-0">
+          <div className="w-28 h-12 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center shrink-0">
             {/* Reemplaza imagen <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" /> */}
             <span className="text-xs text-gray-400 select-none">Logo</span>
           </div>
@@ -41,14 +50,22 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Botón CTA desktop */}
         <div className="hidden md:block">
-          <a
-            href="/login"
-            className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
-          >
-            Login
-          </a>
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-red-600"
+            >
+              Cerrar Sesión
+            </button>
+          ) : (
+            <a
+              href="/login"
+              className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
+            >
+              Login
+            </a>
+          )}
         </div>
 
         {/* Hamburger menu mobile */}
