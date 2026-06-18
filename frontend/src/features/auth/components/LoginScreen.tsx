@@ -4,6 +4,7 @@ import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { useLogin } from '../hooks/useLogin';
 import { useRegister } from '../hooks/useRegister';
 import type { LoginCredentials, RegisterCredentials } from '../types/auth.types';
+import { useNavigate } from 'react-router-dom';
 
 type Mode = 'login' | 'register';
 
@@ -11,6 +12,8 @@ export const LoginScreen = () => {
   const { handleGoogleSuccess, handleGoogleError } = useGoogleAuth();
   const { handleLogin, isLoading: isLoginLoading, error: loginError } = useLogin();
   const { handleRegister, isLoading: isRegisterLoading, error: registerError } = useRegister();
+
+  const navigate = useNavigate();
 
   const [mode, setMode] = useState<Mode>('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -214,6 +217,13 @@ export const LoginScreen = () => {
             <span className="text-xs text-gray-400 font-medium">o continua con</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
+
+          <button
+            onClick={() => navigate('/home')}
+            className="w-full bg-gray-600 hover:bg-yellow-400 text-white hover:text-blue-900 font-semibold py-2.5 rounded-lg transition-colors duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed mb-5"
+          >
+            Ingresar sin cuenta
+          </button>
 
           <div className="flex justify-center">
             <GoogleLogin
