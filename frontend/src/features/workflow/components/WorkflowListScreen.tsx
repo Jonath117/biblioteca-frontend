@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useWorkflow } from '../hooks/useWorkflow';
 import { EstadoRevision } from '../types/workflow.types';
 import { useAuthStore } from '../../../store/authStore';
-import { useWorkspace } from '../../workspace/hooks/useWorkspace';
 import Navbar from '../../../components/Navbar/Navbar';
 import { workspaceApi } from '../../workspace/api/workspace.api';
 
@@ -10,8 +9,6 @@ interface JwtPayload {
   sub: string;
   role: string;
 }
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 export const WorkflowListScreen = () => {
   const { revisiones, loading, error, fetchRevisiones, addComment, assignReviewer, resolveRevision } = useWorkflow();
