@@ -34,7 +34,7 @@ function App() {
           <Route path="/workspace" element={<WorkspaceScreen />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>
   );
