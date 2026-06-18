@@ -6,6 +6,11 @@ export const workspaceApi = {
     const response = await api.get<DocumentoDto[]>('/workspace/documentos');
     return response.data;
   },
+  
+  getDocumentoById: async (id: string): Promise<DocumentoDto> => {
+    const response = await api.get<DocumentoDto>(`/workspace/documentos/${id}`);
+    return response.data;
+  },
 
   subirDocumento: async (data: SubirDocumentoRequest): Promise<SubirDocumentoResponse> => {
     const formData = new FormData();
