@@ -19,7 +19,7 @@ export const useLogin = () => {
 
       const token = await authApi.loginWithCredentials(credentials);
       login(token);
-      navigate('/dashboard');
+      navigate('/home');
     }  catch (err) {
       console.error('Error al iniciar sesión:', err);
 
