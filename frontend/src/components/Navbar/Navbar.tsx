@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import logo from "../../assets/image.png";
 
 interface NavItem {
   label: string;
@@ -26,23 +27,24 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white shadow-md px-6 py-3">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="max-w-9xl mx-auto flex items-center justify-between">
 
         {/* Logo / Imagen rectangular */}
         <div className="flex items-center gap-4">
-          <div className="w-28 h-12 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center shrink-0">
+          <div className="w-80 h-20 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center shrink-0">
             {/* Reemplaza imagen <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" /> */}
-            <span className="text-xs text-gray-400 select-none">Logo</span>
+            {/* <span className="text-xs text-gray-400 select-none">Logo</span> */}
+            <img src={logo} alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
         {/* Navegación desktop */}
-        <ul className="hidden md:flex items-center gap-8">
+        <ul className="hidden md:flex items-center gap-30">
           {navItems.map((item) => (
             <li key={item.label}>
               <a
                 href={item.href}
-                className="text-blue-600 font-medium text-sm tracking-wide transition-colors duration-200 hover:text-yellow-400 px-1 py-1"
+                className="text-blue-600 font-medium text-md tracking-wide transition-colors duration-200 hover:text-yellow-400 px-1 py-1"
               >
                 {item.label}
               </a>
