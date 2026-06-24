@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios"; // 1. NO OLVIDES IMPORTAR AXIOS
 import type { ArticuloPublicado } from "../types/articulo";
 import { getCarreraColor, formatFecha } from "../utils/articulo.utils";
 
@@ -22,12 +23,31 @@ function MetaRow({ label, children }: { label: string; children: React.ReactNode
 
 export function ArticuloDetalle({ articulo, onBack }: ArticuloDetalleProps) {
     const [pdfError, setPdfError] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false); // Estado para animar el botón
+    
     const color = getCarreraColor(articulo.carrera);
 
     const autores = (articulo.nombresAutores ?? "")
         .split(",")
         .map((a) => a.trim())
         .filter(Boolean);
+
+    // 2. LA FUNCIÓN VA ADENTRO DEL COMPONENTE
+    const handleAnalizarServerless = async () => {
+        setIsAnalyzing(true); // Bloqueamos el botón temporalmente
+        try {
+            // Asegúrate de poner aquí tu URL real de API Gateway
+            const response = await axios.get('https://znooosy8ng.execute-api.us-east-1.amazonaws.com/default/fn-analizar-documento');
+            console.log("Respuesta de la Lambda Serverless:", response.data);
+            
+            alert(`⚡ Procesado por: ${response.data.motorCómputo}\n Palabras: ${response.data.conteoPalabras}\n Estado: ${response.data.verificacionEstructura}`);
+        } catch (error) {
+            console.error("Error al invocar la función Serverless:", error);
+            alert("Hubo un error al conectar con AWS Lambda.");
+        } finally {
+            setIsAnalyzing(false); // Restauramos el botón
+        }
+    };
 
     return (
         <div className="max-w-4xl mx-auto px-6 py-8">
@@ -104,21 +124,34 @@ export function ArticuloDetalle({ articulo, onBack }: ArticuloDetalleProps) {
                 </div>
             </div>
 
-            {/* Visor PDF */}
+            {/* Visor PDF y Botón Serverless */}
             <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-100">
                     <span className="text-sm font-medium text-neutral-800">
                         Documento
                     </span>
-                    <a
-                        href={articulo.archivoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs px-3 py-1 rounded-md border transition-colors hover:opacity-80"
-                        style={{ color, borderColor: `${color}55` }}
-                    >
-                        Abrir en nueva pestaña ↗
-                    </a>
+                    
+                    {/* 3. AQUÍ AÑADIMOS EL BOTÓN JUNTO AL LINK DE ABRIR */}
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={handleAnalizarServerless}
+                            disabled={isAnalyzing}
+                            className="text-xs px-3 py-1.5 rounded-md font-medium text-white transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                            style={{ backgroundColor: color }}
+                        >
+                            {isAnalyzing ? "Analizando..." : "⚡ Analizar Serverless"}
+                        </button>
+
+                        <a
+                            href={articulo.archivoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs px-3 py-1.5 rounded-md border transition-colors hover:opacity-80"
+                            style={{ color, borderColor: `${color}55` }}
+                        >
+                            Abrir en nueva pestaña ↗
+                        </a>
+                    </div>
                 </div>
 
                 {!pdfError ? (
