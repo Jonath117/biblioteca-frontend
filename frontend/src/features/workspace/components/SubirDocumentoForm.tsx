@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '../../../store/authStore';
 import { useSubirDocumento } from '../hooks/useSubirDocumento';
+import { workspaceApi } from '../api/workspace.api';
 
 export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: () => void }) => {
   const { token } = useAuthStore();
@@ -10,18 +11,35 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
   const [resumen, setResumen] = useState('');
   const [archivo, setArchivo] = useState<File | null>(null);
   const [coautoresInput, setCoautoresInput] = useState('');
-  const [coautoresIds, setCoautoresIds] = useState<string[]>([]);
+  const [coautoresEmails, setCoautoresEmails] = useState<string[]>([]);
+  const [verificando, setVerificando] = useState(false);
+  const [errorCorreo, setErrorCorreo] = useState<string | null>(null);
 
-  const agregarCoautor = () => {
+  const agregarCoautor = async () => {
     const trimmed = coautoresInput.trim();
-    if (trimmed && !coautoresIds.includes(trimmed)) {
-      setCoautoresIds([...coautoresIds, trimmed]);
+    
+    if (!trimmed) return;
+    
+    if (coautoresEmails.includes(trimmed)) {
+      setErrorCorreo('Este correo ya está en la lista.');
+      return;
+    }
+
+    setVerificando(true);
+    setErrorCorreo(null);
+    try {
+      await workspaceApi.verificarEstudiante(trimmed);
+      setCoautoresEmails([...coautoresEmails, trimmed]);
       setCoautoresInput('');
+    } catch (err: any) {
+      setErrorCorreo('No se encontró un estudiante con ese correo.');
+    } finally {
+      setVerificando(false);
     }
   };
 
-  const quitarCoautor = (id: string) => {
-    setCoautoresIds(coautoresIds.filter((c) => c !== id));
+  const quitarCoautor = (email: string) => {
+    setCoautoresEmails(coautoresEmails.filter((c) => c !== email));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,7 +52,7 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
       titulo,
       resumen,
       archivo,
-      coautoresIds,
+      coautoresEmails,
     });
 
     onDocumentoSubido?.();
@@ -51,7 +69,7 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
     setTitulo('');
     setResumen('');
     setArchivo(null);
-    setCoautoresIds([]);
+    setCoautoresEmails([]);
     setCoautoresInput('');
   };
 
@@ -152,8 +170,8 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
           </label>
           <div className="flex gap-2">
             <input
-              type="text"
-              placeholder="ID del coautor (GUID)"
+              type="email"
+              placeholder="Correo del coautor (ej. luis@ucb.edu.bo)"
               value={coautoresInput}
               onChange={(e) => setCoautoresInput(e.target.value)}
               onKeyDown={(e) => {
@@ -164,25 +182,29 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
               }}
               className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition"
             />
-            <button
+              <button
               type="button"
               onClick={agregarCoautor}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium px-4 py-2.5 rounded-lg transition-colors text-sm"
+              disabled={verificando}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium px-4 py-2.5 rounded-lg transition-colors text-sm disabled:opacity-50"
             >
-              Agregar
+              {verificando ? 'Buscando...' : 'Agregar'}
             </button>
           </div>
-          {coautoresIds.length > 0 && (
+          {errorCorreo && (
+            <p className="text-xs text-red-500 mt-1">{errorCorreo}</p>
+          )}
+          {coautoresEmails.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-2">
-              {coautoresIds.map((id) => (
+              {coautoresEmails.map((email) => (
                 <span
-                  key={id}
+                  key={email}
                   className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full"
                 >
-                  {id.substring(0, 8)}...
+                  {email}
                   <button
                     type="button"
-                    onClick={() => quitarCoautor(id)}
+                    onClick={() => quitarCoautor(email)}
                     className="text-blue-400 hover:text-red-500 transition-colors"
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

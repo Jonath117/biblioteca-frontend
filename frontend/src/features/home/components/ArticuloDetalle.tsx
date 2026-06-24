@@ -7,129 +7,115 @@ interface ArticuloDetalleProps {
     onBack: () => void;
 }
 
+function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div className="flex items-start gap-3 py-2.5 border-b border-neutral-100 last:border-0">
+            <span className="shrink-0 w-24 text-[11px] font-semibold uppercase tracking-wider text-neutral-400 pt-0.5">
+                {label}
+            </span>
+            <div className="flex-1 text-sm text-neutral-800 leading-relaxed">
+                {children}
+            </div>
+        </div>
+    );
+}
+
 export function ArticuloDetalle({ articulo, onBack }: ArticuloDetalleProps) {
     const [pdfError, setPdfError] = useState(false);
     const color = getCarreraColor(articulo.carrera);
 
+    const autores = (articulo.nombresAutores ?? "")
+        .split(",")
+        .map((a) => a.trim())
+        .filter(Boolean);
+
     return (
-        <div style={{ maxWidth: 960, margin: "0 auto", padding: "2rem 1.5rem" }}>
+        <div className="max-w-4xl mx-auto px-6 py-8">
+
+            {/* Botón volver */}
             <button
                 onClick={onBack}
-                style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "none",
-                    border: "0.5px solid var(--color-border-secondary)",
-                    borderRadius: "var(--border-radius-md)",
-                    padding: "6px 14px",
-                    fontSize: 13,
-                    color: "var(--color-text-secondary)",
-                    cursor: "pointer",
-                    marginBottom: "1.5rem",
-                }}
+                className="inline-flex items-center gap-1.5 text-sm text-neutral-500 border border-neutral-200 rounded-lg px-3.5 py-1.5 mb-6 hover:bg-neutral-50 transition-colors cursor-pointer bg-transparent"
             >
                 ← Volver a artículos
             </button>
 
-            <div style={{
-                background: "var(--color-background-primary)",
-                border: "0.5px solid var(--color-border-tertiary)",
-                borderTop: `4px solid ${color}`,
-                borderRadius: "var(--border-radius-lg)",
-                padding: "1.5rem",
-                marginBottom: "1.5rem",
-            }}>
-                <h1 style={{
-                    margin: "0 0 0.75rem",
-                    fontSize: 20,
-                    fontWeight: 500,
-                    color: "var(--color-text-primary)",
-                    lineHeight: 1.3,
-                }}>
+            {/* Tarjeta de información */}
+            <div
+                className="bg-white border border-neutral-200 rounded-xl p-6 mb-5"
+                style={{ borderTop: `4px solid ${color}` }}
+            >
+                {/* Título */}
+                <h1 className="text-xl font-medium text-neutral-900 leading-snug mb-5">
                     {articulo.titulo}
                 </h1>
 
-                <div style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "1rem",
-                    marginBottom: "1rem",
-                    fontSize: 13,
-                    color: "var(--color-text-secondary)",
-                }}>
-                    <span> {articulo.nombresAutores}</span>
-                    <span> {articulo.carrera}</span>
-                    {articulo.materia && <span> {articulo.materia}</span>}
-                    {articulo.fechaPublicacion && <span> {formatFecha(articulo.fechaPublicacion)}</span>}
+                {/* Metadatos fila a fila */}
+                <div className="mb-5">
+                    <MetaRow label="Autores">
+                        <div className="flex flex-wrap gap-1.5">
+                            {autores.map((a) => (
+                                <span
+                                    key={a}
+                                    className="rounded-md px-2.5 py-0.5 text-sm font-medium"
+                                    style={{ background: `${color}12`, color }}
+                                >
+                                    {a}
+                                </span>
+                            ))}
+                        </div>
+                    </MetaRow>
+
+                    <MetaRow label="Carrera">{articulo.carrera}</MetaRow>
+
+                    {articulo.materia && (
+                        <MetaRow label="Materia">{articulo.materia}</MetaRow>
+                    )}
+
+                    {articulo.fechaPublicacion && (
+                        <MetaRow label="Publicado">{formatFecha(articulo.fechaPublicacion)}</MetaRow>
+                    )}
+
+                    {articulo.etiquetas?.length > 0 && (
+                        <MetaRow label="Etiquetas">
+                            <div className="flex flex-wrap gap-1.5">
+                                {articulo.etiquetas.map((e) => (
+                                    <span
+                                        key={e}
+                                        className="rounded px-2.5 py-0.5 text-xs font-medium"
+                                        style={{ background: `${color}14`, color }}
+                                    >
+                                        {e}
+                                    </span>
+                                ))}
+                            </div>
+                        </MetaRow>
+                    )}
                 </div>
 
-                {articulo.etiquetas?.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginBottom: "1rem" }}>
-                        {articulo.etiquetas.map((e) => (
-                            <span
-                                key={e}
-                                style={{
-                                    background: `${color}14`,
-                                    color,
-                                    borderRadius: 4,
-                                    padding: "3px 10px",
-                                    fontSize: 12,
-                                    fontWeight: 500,
-                                }}
-                            >
-                                {e}
-                            </span>
-                        ))}
-                    </div>
-                )}
-
-                <div style={{ borderTop: "0.5px solid var(--color-border-tertiary)", paddingTop: "1rem" }}>
-                    <p style={{
-                        margin: "0 0 0.4rem",
-                        fontSize: 11,
-                        fontWeight: 500,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                        color: "var(--color-text-tertiary)",
-                    }}>
+                {/* Resumen */}
+                <div className="pt-1">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 mb-2">
                         Resumen
                     </p>
-                    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: "var(--color-text-secondary)" }}>
+                    <p className="text-sm leading-7 text-neutral-600">
                         {articulo.resumen}
                     </p>
                 </div>
             </div>
 
             {/* Visor PDF */}
-            <div style={{
-                background: "var(--color-background-primary)",
-                border: "0.5px solid var(--color-border-tertiary)",
-                borderRadius: "var(--border-radius-lg)",
-                overflow: "hidden",
-            }}>
-                <div style={{
-                    padding: "0.9rem 1.25rem",
-                    borderBottom: "0.5px solid var(--color-border-tertiary)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: "var(--color-text-primary)" }}>
+            <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-100">
+                    <span className="text-sm font-medium text-neutral-800">
                         Documento
                     </span>
                     <a
                         href={articulo.archivoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{
-                            fontSize: 12,
-                            color: color,
-                            textDecoration: "none",
-                            border: `0.5px solid ${color}55`,
-                            borderRadius: "var(--border-radius-md)",
-                            padding: "4px 12px",
-                        }}
+                        className="text-xs px-3 py-1 rounded-md border transition-colors hover:opacity-80"
+                        style={{ color, borderColor: `${color}55` }}
                     >
                         Abrir en nueva pestaña ↗
                     </a>
@@ -139,19 +125,19 @@ export function ArticuloDetalle({ articulo, onBack }: ArticuloDetalleProps) {
                     <iframe
                         src={articulo.archivoUrl}
                         title={`PDF: ${articulo.titulo}`}
-                        style={{ width: "100%", height: "75vh", border: "none", display: "block" }}
+                        className="w-full border-0 block"
+                        style={{ height: "75vh" }}
                         onError={() => setPdfError(true)}
                     />
                 ) : (
-                    <div style={{ padding: "3rem", textAlign: "center", color: "var(--color-text-secondary)" }}>
-                        <p style={{ marginBottom: "1rem" }}>
-                            No se pudo mostrar el PDF directamente en el navegador.
-                        </p>
+                    <div className="py-12 text-center text-neutral-500 text-sm">
+                        <p className="mb-3">No se pudo mostrar el PDF directamente en el navegador.</p>
                         <a
                             href={articulo.archivoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color, fontWeight: 500 }}
+                            className="font-medium hover:underline"
+                            style={{ color }}
                         >
                             Descargar o abrir el documento →
                         </a>

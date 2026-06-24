@@ -8,6 +8,7 @@ interface ArticuloCardProps {
 
 export function ArticuloCard({ articulo, onClick }: ArticuloCardProps) {
     const color = getCarreraColor(articulo.carrera);
+
     const initiales = (articulo.nombresAutores ?? "")
         .split(",")[0]
         .trim()
@@ -19,104 +20,46 @@ export function ArticuloCard({ articulo, onClick }: ArticuloCardProps) {
     return (
         <article
             onClick={onClick}
-            style={{
-                background: "var(--color-background-primary)",
-                border: "0.5px solid var(--color-border-tertiary)",
-                borderTop: `3px solid ${color}`,
-                borderRadius: "var(--border-radius-lg)",
-                padding: "1.25rem",
-                cursor: "pointer",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
-                transition: "border-color 0.15s, box-shadow 0.15s",
-            }}
-            onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = color;
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${color}22`;
-            }}
-            onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--color-border-tertiary)";
-                (e.currentTarget as HTMLElement).style.borderTopColor = color;
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
-            }}
+            className="bg-white border border-neutral-200 rounded-xl p-5 cursor-pointer flex flex-col gap-3 hover:shadow-md transition-shadow duration-150"
+            style={{ borderTop: `3px solid ${color}` }}
         >
             {/* Encabezado: avatar + título + autor */}
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem" }}>
+            <div className="flex items-start gap-3">
                 <div
-                    aria-hidden="true"
-                    style={{
-                        flexShrink: 0,
-                        width: 38,
-                        height: 38,
-                        borderRadius: "50%",
-                        background: `${color}18`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: color,
-                    }}
+                    className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium"
+                    style={{ background: `${color}18`, color }}
                 >
                     {initiales || "AU"}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{
-                        margin: 0,
-                        fontSize: 13,
-                        fontWeight: 500,
-                        color: "var(--color-text-primary)",
-                        lineHeight: 1.3,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                    }}>
+                <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-neutral-900 leading-snug line-clamp-2">
                         {articulo.titulo}
                     </p>
-                    <p style={{ margin: "4px 0 0", fontSize: 12, color: "var(--color-text-secondary)" }}>
+                    <p className="mt-1 text-xs text-neutral-500">
                         {articulo.nombresAutores}
                     </p>
                 </div>
             </div>
 
             {/* Resumen */}
-            <p style={{
-                margin: 0,
-                fontSize: 12.5,
-                color: "var(--color-text-secondary)",
-                lineHeight: 1.6,
-                overflow: "hidden",
-                display: "-webkit-box",
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: "vertical",
-                flexGrow: 1,
-            }}>
+            <p className="text-xs text-neutral-500 leading-relaxed line-clamp-3 grow">
                 {articulo.resumen}
             </p>
 
             {/* Etiquetas */}
             {articulo.etiquetas?.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
+                <div className="flex flex-wrap gap-1">
                     {articulo.etiquetas.slice(0, 4).map((etiqueta) => (
                         <span
                             key={etiqueta}
-                            style={{
-                                background: `${color}14`,
-                                color: color,
-                                borderRadius: 4,
-                                padding: "2px 8px",
-                                fontSize: 11,
-                                fontWeight: 500,
-                            }}
+                            className="rounded px-2 py-0.5 text-[11px] font-medium"
+                            style={{ background: `${color}14`, color }}
                         >
                             {etiqueta}
                         </span>
                     ))}
                     {articulo.etiquetas.length > 4 && (
-                        <span style={{ fontSize: 11, color: "var(--color-text-tertiary)", padding: "2px 4px" }}>
+                        <span className="text-[11px] text-neutral-400 px-1 py-0.5">
                             +{articulo.etiquetas.length - 4}
                         </span>
                     )}
@@ -124,20 +67,12 @@ export function ArticuloCard({ articulo, onClick }: ArticuloCardProps) {
             )}
 
             {/* Footer */}
-            <div style={{
-                borderTop: "0.5px solid var(--color-border-tertiary)",
-                paddingTop: "0.6rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: "0.5rem",
-                flexWrap: "wrap",
-            }}>
-                <span style={{ fontSize: 11.5, color: "var(--color-text-secondary)" }}>
+            <div className="border-t border-neutral-100 pt-2.5 flex justify-between items-center flex-wrap gap-1">
+                <span className="text-xs text-neutral-500">
                     {articulo.carrera}
-                    {articulo.materia ? <> · {articulo.materia}</> : null}
+                    {articulo.materia ? ` · ${articulo.materia}` : ""}
                 </span>
-                <span style={{ fontSize: 11, color: "var(--color-text-tertiary)" }}>
+                <span className="text-[11px] text-neutral-400">
                     {formatFecha(articulo.fechaPublicacion)}
                 </span>
             </div>

@@ -12,14 +12,19 @@ export const workspaceApi = {
     return response.data;
   },
 
+  verificarEstudiante: async (email: string): Promise<{ nombre: string, apellido: string }> => {
+    const response = await api.get<{ nombre: string, apellido: string }>(`/workspace/estudiantes/verificar/${email}`);
+    return response.data;
+  },
+
   subirDocumento: async (data: SubirDocumentoRequest): Promise<SubirDocumentoResponse> => {
     const formData = new FormData();
     formData.append('Titulo', data.titulo);
     formData.append('Resumen', data.resumen);
     formData.append('Archivo', data.archivo);
 
-    data.coautoresIds.forEach((id) => {
-      formData.append('CoautoresIds', id);
+    data.coautoresEmails.forEach((email) => {
+      formData.append('CoautoresEmails', email);
     });
 
     const response = await api.post<SubirDocumentoResponse>(

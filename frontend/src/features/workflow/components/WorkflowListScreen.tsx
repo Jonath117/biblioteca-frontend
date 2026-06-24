@@ -16,6 +16,7 @@ export const WorkflowListScreen = () => {
   const [selectedRevisionId, setSelectedRevisionId] = useState<string | null>(null);
   const [comentario, setComentario] = useState('');
   const [userData, setUserData] = useState<JwtPayload | null>(null);
+  const [documentTitles, setDocumentTitles] = useState<Record<string, string>>({});
 
 
   useEffect(() => {
@@ -34,6 +35,34 @@ export const WorkflowListScreen = () => {
       }
     }
   }, [fetchRevisiones, token]);
+
+  useEffect(() => {
+    const fetchTitles = async () => {
+      // Obtenemos los IDs únicos que aún no hemos buscado
+      const idsToFetch = [...new Set(revisiones.map(r => r.documentoId))].filter(id => !documentTitles[id]);
+      
+      if (idsToFetch.length > 0) {
+        const newTitles: Record<string, string> = {};
+        await Promise.all(
+          idsToFetch.map(async (id) => {
+            try {
+              const doc = await workspaceApi.getDocumentoById(id);
+              newTitles[id] = doc.titulo;
+            } catch (err) {
+              console.error(`Error fetching document ${id}`, err);
+              newTitles[id] = 'Título no disponible';
+            }
+          })
+        );
+        
+        setDocumentTitles(prev => ({ ...prev, ...newTitles }));
+      }
+    };
+
+    if (revisiones.length > 0) {
+      fetchTitles();
+    }
+  }, [revisiones]);
 
   const selectedRevision = revisiones.find(r => r.id === selectedRevisionId) || null;
 
@@ -78,7 +107,7 @@ export const WorkflowListScreen = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Documento</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
@@ -87,8 +116,8 @@ export const WorkflowListScreen = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {revisiones.map((rev) => (
                   <tr key={rev.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-50">
-                      {rev.documentoId}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-50" title={rev.documentoId}>
+                      {documentTitles[rev.documentoId] || 'Cargando...'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border border-transparent
@@ -135,8 +164,11 @@ export const WorkflowListScreen = () => {
             {/* Info del documento */}
             <div className="mb-6 bg-gray-50 p-4 rounded-md border border-gray-100">
               <p className="text-sm text-gray-600 mb-2">
-                <span className="font-bold text-gray-900">ID Documento:</span><br />
-                <span className="break-all">{selectedRevision.documentoId}</span>
+                <span className="font-bold text-gray-900">Documento:</span><br />
+                <span className="break-all">{documentTitles[selectedRevision.documentoId] || 'Cargando...'}</span>
+              </p>
+              <p className="text-xs text-gray-400 mb-2">
+                <span className="font-bold">ID:</span> {selectedRevision.documentoId}
               </p>
 
                 <div className="mt-3 pt-3 border-t border-gray-200">

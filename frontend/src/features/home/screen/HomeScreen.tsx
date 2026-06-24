@@ -21,47 +21,33 @@ export const HomeScreen = () => {
     return (
         <>
             <Navbar />
-            <main style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem" }}>
-                <div style={{ marginBottom: "1.75rem" }}>
-                    <h1 style={{ margin: 0, fontSize: 22, fontWeight: 500, color: "var(--color-text-primary)" }}>
+            <main className="max-w-6xl mx-auto px-6 py-8">
+                <div className="mb-7">
+                    <h1 className="text-2xl font-medium text-neutral-900">
                         Artículos publicados
                     </h1>
                     {!loading && !error && (
-                        <p style={{ margin: "0.35rem 0 0", fontSize: 13, color: "var(--color-text-secondary)" }}>
+                        <p className="mt-1 text-sm text-neutral-500">
                             {articulos.length} {articulos.length === 1 ? "artículo disponible" : "artículos disponibles"}
                         </p>
                     )}
                 </div>
 
                 {loading && (
-                    <p style={{ color: "var(--color-text-secondary)", fontSize: 14 }}>
-                        Cargando artículos…
-                    </p>
+                    <p className="text-sm text-neutral-500 py-8">Cargando artículos…</p>
                 )}
 
                 {error && (
-                    <div style={{
-                        background: "var(--color-background-danger)",
-                        color: "var(--color-text-danger)",
-                        borderRadius: "var(--border-radius-md)",
-                        padding: "0.75rem 1rem",
-                        fontSize: 13,
-                    }}>
+                    <div className="bg-red-50 text-red-600 rounded-lg px-4 py-3 text-sm">
                         {error}
                     </div>
                 )}
 
                 {!loading && !error && articulos.length === 0 && (
-                    <p style={{ color: "var(--color-text-secondary)", fontSize: 14 }}>
-                        No hay artículos publicados aún.
-                    </p>
+                    <p className="text-sm text-neutral-500">No hay artículos publicados aún.</p>
                 )}
 
-                <div style={{
-                    display: "grid",
-                    gap: "1rem",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                }}>
+                <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
                     {articulos.map((articulo) => (
                         <ArticuloCard
                             key={articulo.id}

@@ -14,7 +14,7 @@ export interface SubirDocumentoRequest {
   titulo: string;
   resumen: string;
   archivo: File;
-  coautoresIds: string[];
+  coautoresEmails: string[];
 }
 
 export interface SubirDocumentoResponse {
