@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginScreen } from './features/auth/components/LoginScreen';
 import { ProtectedRoute } from './routes/ProtectedRoute';
-import { HomeScreen } from './features/home/components/HomeScreen';
+import { HomeScreen } from './features/home/screen/HomeScreen';
 import { WorkflowListScreen } from './features/workflow/components/WorkflowListScreen';
 import { WorkspaceScreen } from './features/workspace/components/WorkspaceScreen';
 import { useAuthStore } from './store/authStore';
