@@ -12,7 +12,6 @@ const navItems: NavItem[] = [
   { label: "Inicio", href: "/home" },
   { label: "Subir Documento", href: "/workspace" },
   { label: "Mis Documentos", href: "/workflow" },
-  { label: "Contacto", href: "#" },
 ];
 
 export default function Navbar() {
@@ -29,16 +28,12 @@ export default function Navbar() {
     <nav className="w-full bg-white shadow-md px-6 py-3">
       <div className="max-w-9xl mx-auto flex items-center justify-between">
 
-        {/* Logo / Imagen rectangular */}
         <div className="flex items-center gap-4">
           <div className="w-80 h-20 bg-gray-200 rounded-md overflow-hidden flex items-center justify-center shrink-0">
-            {/* Reemplaza imagen <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" /> */}
-            {/* <span className="text-xs text-gray-400 select-none">Logo</span> */}
             <img src={logo} alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        {/* Navegación desktop */}
         <ul className="hidden md:flex items-center gap-30">
           {navItems.map((item) => (
             <li key={item.label}>
@@ -52,23 +47,31 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden md:block">
-          {isAuthenticated ? (
+      <div className="flex gap-8">
+        {isAuthenticated ? (
+          <>
             <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-red-600"
-            >
-              Cerrar Sesión
+                onClick={() => navigate("/profile")}
+                className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
+              >
+                  Mi Perfil
             </button>
-          ) : (
-            <a
-              href="/login"
-              className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
-            >
-              Login
-            </a>
-          )}
-        </div>
+            <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-red-600"
+              >
+                Cerrar Sesión
+              </button>
+          </>
+        ) : (
+          <a
+            href="/login"
+            className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
+          >
+            Login
+          </a>
+        )}
+      </div>
 
         {/* Hamburger menu mobile */}
         <button
@@ -111,7 +114,7 @@ export default function Navbar() {
                 href="#"
                 className="block text-center bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors duration-200 hover:bg-yellow-400 hover:text-blue-900"
               >
-                Empezar
+                Opciones
               </a>
             </li>
           </ul>
