@@ -103,7 +103,7 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden">
+    <div className="bg-gray-200 rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden">
       <div className="bg-blue-600 px-10 py-8 text-center">
         <div className="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
           <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
