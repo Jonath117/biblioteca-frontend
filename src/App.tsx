@@ -3,7 +3,7 @@ import { LoginScreen } from './features/auth/components/LoginScreen';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import { HomeScreen } from './features/home/screen/HomeScreen';
 import { WorkflowListScreen } from './features/workflow/components/WorkflowListScreen';
-import { WorkspaceScreen } from './features/workspace/components/WorkspaceScreen';
+import { WorkspaceScreen } from './features/workspace/screens/WorkspaceScreen';
 import { useAuthStore } from './store/authStore';
 
 const DashboardPrueba = () => {
