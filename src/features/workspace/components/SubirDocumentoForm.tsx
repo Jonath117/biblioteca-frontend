@@ -3,13 +3,22 @@ import { useAuthStore } from '../../../store/authStore';
 import { useSubirDocumento } from '../hooks/useSubirDocumento';
 import { workspaceApi } from '../api/workspace.api';
 
-export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: () => void }) => {
+interface SubirDocumentoFormProps {
+  onDocumentoSubido?: () => void;
+  archivo: File | null;    
+  onArchivoChange: (file: File | null) => void;
+}
+
+export const SubirDocumentoForm = ({ 
+  onDocumentoSubido, 
+  archivo,        
+  onArchivoChange 
+}: SubirDocumentoFormProps) => {
   const { token } = useAuthStore();
   const { subirDocumento, isLoading, error, documentoId } = useSubirDocumento();
 
   const [titulo, setTitulo] = useState('');
   const [resumen, setResumen] = useState('');
-  const [archivo, setArchivo] = useState<File | null>(null);
   const [coautoresInput, setCoautoresInput] = useState('');
   const [coautoresEmails, setCoautoresEmails] = useState<string[]>([]);
   const [verificando, setVerificando] = useState(false);
@@ -61,14 +70,14 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
   const handleArchivoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setArchivo(file);
+      onArchivoChange?.(file);
     }
   };
 
   const handleReset = () => {
     setTitulo('');
     setResumen('');
-    setArchivo(null);
+    onArchivoChange?.(null);
     setCoautoresEmails([]);
     setCoautoresInput('');
   };
@@ -103,7 +112,7 @@ export const SubirDocumentoForm = ({ onDocumentoSubido }: { onDocumentoSubido?: 
   }
 
   return (
-    <div className="bg-gray-200 rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden">
+    <div className="rounded-2xl border border-gray-400 shadow-lg shadow-xl w-full max-w-lg mx-auto overflow-hidden">
       <div className="bg-blue-600 px-10 py-8 text-center">
         <div className="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
           <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
