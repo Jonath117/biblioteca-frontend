@@ -2,10 +2,12 @@ import { useState, useCallback } from 'react';
 import { useDocumentos } from '../hooks/useDocumentos';
 import { SubirDocumentoForm } from '../components/SubirDocumentoForm';
 import Navbar from '../../../components/Navbar/Navbar';
+import { PdfPreview } from '../components/PdfPreview';
 
 export const WorkspaceScreen = () => {
   const { documentos, isLoading, error, recargar } = useDocumentos();
   const [recargarTrigger, setRecargarTrigger] = useState(0);
+  const [archivoSeleccionado, setArchivoSeleccionado] = useState<File | null>(null);
 
   const handleDocumentoSubido = useCallback(() => {
     recargar();
@@ -33,8 +35,8 @@ export const WorkspaceScreen = () => {
       <Navbar />
         <div className="max-w-7xl mx-auto px-4 py-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-2">
-              <div className="bg-gray-300 rounded-2xl shadow-md p-6 sticky top-10">
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl border border-gray-400 shadow-lg p-6 sticky top-10">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Mis Documentos</h2>
 
                 {isLoading && (
@@ -95,11 +97,17 @@ export const WorkspaceScreen = () => {
             </div>
 
             <div className="lg:col-span-4">
-              <SubirDocumentoForm key={recargarTrigger} onDocumentoSubido={handleDocumentoSubido} />
+              <SubirDocumentoForm 
+                key={recargarTrigger} 
+                onDocumentoSubido={handleDocumentoSubido}
+                archivo={archivoSeleccionado}
+                onArchivoChange={setArchivoSeleccionado}
+                />
             </div>
 
-            <div className="bg-gray-300 rounded-2xl lg:col-span-6">
+            <div className="shadow-lg rounded-2xl lg:col-span-5">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">Previsualizacion</h2>
+                <PdfPreview file={archivoSeleccionado}></PdfPreview>
             </div>
           </div>
         </div>
@@ -107,3 +115,4 @@ export const WorkspaceScreen = () => {
     </div>
   );
 };
+
