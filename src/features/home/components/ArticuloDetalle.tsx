@@ -6,7 +6,6 @@ interface ArticuloDetalleProps {
     articulo: ArticuloPublicado;
     onBack: () => void;
 }
-
 function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
     return (
         <div className="flex items-start gap-3 py-2.5 border-b border-neutral-100 last:border-0">
@@ -14,7 +13,7 @@ function MetaRow({ label, children }: { label: string; children: React.ReactNode
                 {label}
             </span>
             <div className="flex-1 text-sm text-neutral-800 leading-relaxed">
-                {children}
+                {children}      
             </div>
         </div>
     );
